@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧠 Gemini RAG Chatbot
 
-## Getting Started
+A high-performance Retrieval-Augmented Generation (RAG) application built with **Next.js**, leveraging **Google Gemini** for intelligent responses and **Neon DB** for scalable vector storage.
 
-First, run the development server:
+## 🚀 Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This chatbot doesn't just chat—it remembers. By vectorizing your documents and storing them in a PostgreSQL database (via Neon), the bot can retrieve relevant context to provide accurate, grounded answers using the latest LLM capabilities.
+
+### Key Tech Stack
+
+  * **Framework:** [Next.js 15+](https://nextjs.org/) (App Router)
+  * **LLM:** `gemini-2.5-flash` for fast, multimodal reasoning.
+  * **Embeddings:** `text-embedding-004` for high-dimensional vectorization.
+  * **Vector Database:** [Neon DB](https://neon.tech/) with `pgvector`.
+  * **Styling:** Tailwind CSS.
+
+-----
+
+## ✨ Features
+
+  * **Semantic Search:** Uses Google's state-of-the-art embedding model to understand context, not just keywords.
+  * **Fast Inference:** Powered by Gemini 2.5 Flash for near-instant response times.
+  * **Serverless Vector Storage:** Neon DB provides a serverless PostgreSQL experience with built-in vector support.
+  * **Streaming UI:** Real-time message streaming for a smooth, ChatGPT-like experience.
+
+-----
+
+## 🛠️ Getting Started
+
+### 1\. Prerequisites
+
+  * A [Google AI Studio](https://aistudio.google.com/) API Key.
+  * A [Neon.tech](https://neon.tech/) PostgreSQL connection string.
+
+### 2\. Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```env
+GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_key_here
+DATABASE_URL=your_neon_connection_string_here
+CLERK_SECRET_KEY=your_clerk_secret_key_for_auth
+NEON_DATABASE_URL=your_neon_db_url
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3\. Installation & Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Install dependencies
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Run the migration to set up pgvector on Neon
+# (If you have a setup script)
+npm run db:setup 
 
-## Learn More
+# Start the dev server
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) to start chatting with your data.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-----
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🏗️ Architecture
 
-## Deploy on Vercel
+1.  **Ingestion:** Documents are split into chunks and converted into vectors using `text-embedding-004`.
+2.  **Storage:** Vectors and metadata are stored in **Neon DB** using the `pgvector` extension.
+3.  **Retrieval:** When a user asks a question, the app generates a query embedding and performs a cosine similarity search in SQL.
+4.  **Generation:** The retrieved context + user prompt are sent to **Gemini 2.5 Flash** to generate the final response.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+-----
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*Built with ❤️ for the next generation of AI-driven apps.*
