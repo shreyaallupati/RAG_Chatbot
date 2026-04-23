@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { processPDF } from "./actions";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2 } from "lucide-react";
+import { Loader2, FileUp } from "lucide-react";
 
 export default function PDFUpload() {
   const [isLoading, setIsLoading] = useState(false);
@@ -52,49 +52,49 @@ export default function PDFUpload() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-          PDF Upload
-        </h1>
-        <Card className="mb-6 border-2 border-red-500"> {/* Red border for debugging */}
-          <CardContent className="pt-6">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="pdf-upload">Upload PDF File</Label>
-                <Input
-                  id="pdf-upload"
-                  type="file"
-                  accept=".pdf"
-                  onChange={handleFileUpload}
-                  disabled={isLoading}
-                  className="mt-2"
-                />
-              </div>
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md shadow-lg border-border/50">
+        <CardHeader className="text-center pb-4">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+            <FileUp className="h-6 w-6 text-primary" />
+          </div>
+          <CardTitle className="text-2xl font-semibold tracking-tight">Upload Document</CardTitle>
+          <CardDescription>Upload a PDF file to index it into your knowledge base.</CardDescription>
+        </CardHeader>
+        
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="pdf-upload" className="sr-only">Upload PDF File</Label>
+            <Input
+              id="pdf-upload"
+              type="file"
+              accept=".pdf"
+              onChange={handleFileUpload}
+              disabled={isLoading}
+              className="cursor-pointer file:cursor-pointer hover:bg-muted/50 transition-colors"
+            />
+          </div>
 
-              {isLoading && (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  <span className="text-muted-foreground">
-                    Processing PDF...
-                  </span>
-                </div>
-              )}
-
-              {message && (
-                <Alert
-                  variant={message.type === "error" ? "destructive" : "default"}
-                >
-                  <AlertTitle>
-                    {message.type === "error" ? "Error!" : "Success!"}
-                  </AlertTitle>
-                  <AlertDescription>{message.text}</AlertDescription>
-                </Alert>
-              )}
+          {isLoading && (
+            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground p-4 bg-muted/20 rounded-md">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Extracting and embedding text...</span>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          )}
+
+          {message && (
+            <Alert
+              variant={message.type === "error" ? "destructive" : "default"}
+              className={message.type === "success" ? "border-green-500/50 text-green-600 bg-green-500/10 dark:text-green-400" : ""}
+            >
+              <AlertTitle>
+                {message.type === "error" ? "Upload Failed" : "Success"}
+              </AlertTitle>
+              <AlertDescription>{message.text}</AlertDescription>
+            </Alert>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

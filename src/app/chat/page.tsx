@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import {useChat} from "@ai-sdk/react";
 
 import {
@@ -24,40 +24,63 @@ import {Loader} from "@/components/ai-elements/loader";
 export default function RAGChatBot(){
 
     const [input, setInput] = useState("");
-    const {messages, sendMessage, status} = useChat();
+    const {messages, sendMessage, status, error} = useChat();
+
+    useEffect(() => {
+        if (error) {
+            console.error("Chat error:", error);
+        }
+    }, [error]);
 
     const handleSubmit = (message: PromptInputMessage) => {
         if (!message.text) return;
+        console.log("Submitting message:", message.text);
         sendMessage({text: message.text });
         setInput("");
     }
 
-    return (<div className="max-w-4xl mx-auto p-6 relative size-full h-[calc(100vh-4rem)]">
+    return (<div className="max-w-4xl mx-auto p-6 relative flex flex-col h-[calc(100dvh-4rem)]">
         <div className="flex flex-col h-full">
             <Conversation className="h-full">
-                <ConversationContent >{
-                    messages.map((message) => (
-                        <div key={message.id}>
-                            {message.parts.map((part, index) => {
-                                switch(part.type){
-                                    case "text":
-                                        return (
-                                            <Fragment key={`${message.id}-${index}`}>
-                                                <Message from={message.role}>
-                                                    <MessageContent>
-                                                        <MessageResponse>{part.text}</MessageResponse>
-                                                    </MessageContent>
-                                                </Message>
-                                            </Fragment>
-                                        );
-                                    default:
-                                        return null;
-                                }
-                            })}
+                <ConversationContent>
+                    {messages.length === 0 ? (
+                        <div className="flex items-center justify-center h-full text-zinc-400">
+                            <p>Start a conversation by typing a message below</p>
                         </div>
-                    ))}
-                    {(status === "submitted" || status === "streaming") && <Loader />}
-                    </ConversationContent>
+                    ) : (
+                        messages.map((message, msgIndex) => {
+                            console.log(`Rendering message ${msgIndex}:`, message);
+                            return (
+                                <div key={`msg-${msgIndex}`}>
+                                    {message.parts && message.parts.length > 0 ? (
+                                        message.parts.map((part, partIndex) => {
+                                            if (part.type === "text") {
+                                                return (
+                                                    <Fragment key={`${msgIndex}-${partIndex}`}>
+                                                        <Message from={message.role}>
+                                                            <MessageContent>
+                                                                <MessageResponse>{part.text}</MessageResponse>
+                                                            </MessageContent>
+                                                        </Message>
+                                                    </Fragment>
+                                                );
+                                            }
+                                            return null;
+                                        })
+                                    ) : (
+                                        <div className="text-zinc-500 text-sm">Empty message</div>
+                                    )}
+                                </div>
+                            );
+                        })
+                    )}
+                    {status === "streaming" && <Loader />}
+                    {error && (
+                        <div className="text-red-500 text-sm mt-4 p-4 bg-red-50 dark:bg-red-950 rounded">
+                            Error: {error.message}
+                        </div>
+                    )}
+                </ConversationContent>
                 <ConversationScrollButton />
             </Conversation>
             <PromptInput onSubmit={handleSubmit} className="mt-4">
