@@ -52,8 +52,11 @@ export default function PDFUpload() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md shadow-lg border-border/50">
+    // 1. REMOVED bg-background from here
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
+      
+      {/* 2. ADDED pointer-events-auto, bg-background/80, and backdrop-blur-sm here */}
+      <Card className="w-full max-w-md shadow-lg border-border/50 pointer-events-auto bg-background/80 backdrop-blur-sm">
         <CardHeader className="text-center pb-4">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <FileUp className="h-6 w-6 text-primary" />

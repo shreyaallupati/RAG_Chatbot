@@ -40,7 +40,7 @@ export default function RAGChatBot(){
     }
 
     return (<div className="max-w-4xl mx-auto p-6 relative flex flex-col h-[calc(100dvh-4rem)]">
-        <div className="flex flex-col h-full">
+        <div className="flex-1 flex flex-col border rounded-xl shadow-lg pointer-events-auto bg-background/80 backdrop-blur-md overflow-hidden">
             <Conversation className="h-full">
                 <ConversationContent>
                     {messages.length === 0 ? (

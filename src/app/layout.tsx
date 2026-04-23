@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./global.css";
 
-
-import {
-  ClerkProvider
-} from '@clerk/nextjs'
+import { ClerkProvider } from '@clerk/nextjs'
 import { Navigation } from "@/components/navigation";
+import { ThemeProvider } from "@/components/theme-provider";
+import Dither from "@/components/ui/Dither"; // Adjust this import path to wherever your Dither component is saved
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,10 +29,34 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <Navigation />
-          {children}
+      {/* suppressHydrationWarning is required for next-themes */}
+      <html lang="en" suppressHydrationWarning> 
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {/* Global Background Animation */}
+            <div className="fixed inset-0 z-0 w-full h-full pointer-events-auto">
+              <Dither
+                waveColor={[0.27450980392156865,0,0.43529411764705883]}
+                disableAnimation={false}
+                enableMouseInteraction={true}
+                mouseRadius={0.5}
+                colorNum={4}
+                waveAmplitude={0.48}
+                waveFrequency={2.2}
+                waveSpeed={0.07}
+              />
+            </div>
+
+            <Navigation />
+            <main className="relative z-10 pointer-events-none">
+              {children}
+            </main>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

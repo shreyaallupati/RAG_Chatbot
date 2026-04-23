@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from 'path'
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -7,6 +8,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '10mb', // Adjust based on your expected PDF sizes
     },
   },
+  outputFileTracingRoot: path.join(__dirname, './'),
   serverExternalPackages : ["pdf-parse", "unpdf"]
 };
 
