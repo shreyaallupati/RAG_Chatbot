@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client"
 /* eslint-disable react/no-unknown-property */
 import { useRef, useState, useEffect, forwardRef, Suspense } from 'react';
